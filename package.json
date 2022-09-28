@@ -1,0 +1,31 @@
+{
+  "name": "@jasonfleischer/spectrogram",
+  "version": "1.0.0",
+  "description": "a spectrogram view",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jasonfleischer/npm-spectrogram.git"
+  },
+  "keywords": [
+    "spectrogram",
+    "audio"
+  ],
+  "author": {
+    "name": "Jason Fleischer",
+    "email": "jason_fleischer@hotmail.ca",
+    "url": "http://jasonfleischer.github.io/website/"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://ko-fi.com/jasonfleischer"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jasonfleischer/npm-spectrogram/issues"
+  },
+  "homepage": "https://github.com/jasonfleischer/npm-spectrogram#readme"
+}
