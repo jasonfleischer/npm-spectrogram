@@ -1,6 +1,6 @@
 ## [@jasonfleischer/spectrogram](https://www.npmjs.com/package/@jasonfleischer/spectrogram)
 
-A package for displaying a spectrogram. Click [HERE](https://jasonfleischer.github.io/npm-spectrogram-demo/) to see a demo
+A package for displaying a spectrogram. A spectrogram is a visual representation of the spectrum of frequencies of a signal as it varies with time. Click [HERE](https://jasonfleischer.github.io/npm-spectrogram-demo/) to see a demo.
 
 ![Screenshot](https://jasonfleischer.github.io/npm-spectrogram-demo/screenshot/screen.png "Screenshot")
 
@@ -11,7 +11,10 @@ $ npm i @jasonfleischer/spectrogram
 
 #### Usage
 ``` html
-<div id="your_spectrogram_id"></div>
+<div style="width: 500px; height: 320px" id="your_spectrogram_id"></div>
+
+<button id="your_button_id">Start</button>
+
 ```
 
 ``` javascript
@@ -21,49 +24,54 @@ const Spectrogram = require("@jasonfleischer/spectrogram");
 
 var spectrogram = new Spectrogram(id = "your_spectrogram_id", useHeatMapColors = true, highlightPeaks = false, darkMode = true, minimumFrequency = 0, maximumFrequency = 22050 );
 
-// STEP 2. build analyzerNode
-var ctx = new AudioContext();
-var analyzerNode = audio_controller.ctx.createAnalyser();
-analyzerNode.smoothingTimeConstant = 0;
-analyzerNode.fftSize = fftSize;
+var audioContext = {};
 
-// STEP 3. request microphone access
-navigator.mediaDevices.getUserMedia({ video: false, audio: true })
-  	.then( (mediaStreamObj) => {
-  		onStreamAquired(mediaStreamObj);
-		var sourceNode = ctx.createMediaStreamSource(mediaStreamObj);
-		sourceNode.connect(analyzerNode);
-		spectrogram.draw(analyzerNode, ctx.sampleRate);
-	})
-	.catch( (err) => {
-	 	console.log("getUserMedia: " + err);
-	});
+document.getElementById("your_button_id").onclick = onStartClickEvent;
 
-// ---- OR ----
+function onStartClickEvent(){
 
-// STEP 3. setup audio element
-audio_controller.audioElement = document.createElement("your_audio-element_id");
-audio_controller.audioElement.src = "audio/your_audio_path.mp3";			
-audio_controller.audioElement.oncanplay = function () { 
-	var mediaStreamObj = audio_controller.audioElement.captureStream();
-	onStreamAquired(mediaStreamObj);
+	// STEP 2. build analyzerNode
+	audioContext = new AudioContext();
+	var analyzerNode = audioContext.createAnalyser();
+	analyzerNode.smoothingTimeConstant = 0;
+	analyzerNode.fftSize = 1024;
+
+	// STEP 3. request microphone access
+	navigator.mediaDevices.getUserMedia({ video: false, audio: true })
+	  	.then( (mediaStreamObj) => {
+	  		onStreamAquired(mediaStreamObj, analyzerNode);
+		})
+		.catch( (err) => {
+		 	console.log("getUserMedia: " + err);
+		});
+
+	// ---- OR ----
+
+	// STEP 3. setup audio element
+	/*var audioElement = document.createElement("AUDIO");
+	audioElement.src = "audio/your_audio_file.mp3";		
+	audioElement.autoplay = true;	
+	audioElement.oncanplay = function () { 
+		var mediaStreamObj = audioElement.captureStream();
+		onStreamAquired(mediaStreamObj, analyzerNode);
+	}*/
 }
 
 // STEP 4. connect spectrogram
-function onStreamAquired(mediaStreamObj) {
-	var sourceNode = ctx.createMediaStreamSource(mediaStreamObj);
+function onStreamAquired(mediaStreamObj, analyzerNode) {
+	var sourceNode = audioContext.createMediaStreamSource(mediaStreamObj);
 	sourceNode.connect(analyzerNode);
-	spectrogram.draw(analyzerNode, ctx.sampleRate);
+	spectrogram.draw(analyzerNode, audioContext.sampleRate);
 }
 
 // Additional commands
 
-spectrogram.resume();
-spectrogram.pause();
+/*spectrogram.resume();
+spectrogram.pause();*/
 
 ```
 
 #### Sample Projects
 
 - [Demo](https://jasonfleischer.github.io/npm-spectrogram-demo/)
-- [Spectrogram](https://jasonfleischer.github.io/spectrogram/)
+- [Spectrogram website](https://jasonfleischer.github.io/spectrogram/)
